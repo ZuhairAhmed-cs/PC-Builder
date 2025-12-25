@@ -1,65 +1,128 @@
-import Image from "next/image";
+import { ExperienceSelector } from "@/components/experience-selector";
+import { HomeRedirectCheck } from "@/components/home-redirect-check";
+import {
+  getPageByUrl,
+  extractHeroBlock,
+  isContentstackConfigured,
+  getExperienceLevelsFromPage,
+} from "@/lib/contentstack";
+import type { ExperienceLevel } from "@/types";
 
-export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+interface Feature {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+interface HeroData {
+  title: string;
+  description: string;
+  features: Feature[];
+}
+
+export default async function Home() {
+  let heroData: HeroData | null = null;
+  let experienceLevels: ExperienceLevel[] = [];
+
+  if (isContentstackConfigured()) {
+    try {
+      const page = await getPageByUrl("/");
+      if (page) {
+        const hero = extractHeroBlock(page);
+        if (hero) {
+          heroData = {
+            title: hero.title || "",
+            description: hero.description || "",
+            features:
+              hero.features?.map((f) => ({
+                icon: f.icon || "",
+                title: f.title || "",
+                description: f.description || "",
+              })) || [],
+          };
+        }
+        // Extract experience levels from page
+        experienceLevels = getExperienceLevelsFromPage(page);
+      }
+    } catch (error) {
+      console.error("Error fetching home page:", error);
+    }
+  }
+
+  // If no CMS data, show error state
+  if (!heroData) {
+    return (
+      <div className="flex-1 flex items-center justify-center px-4 py-12">
+        <div className="text-center">
+          <h1 className="font-heading text-2xl font-bold mb-4">
+            Content Not Available
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-muted-foreground">
+            Please configure Contentstack and add home page content.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {/* Client component to handle redirect if user already has level selected */}
+      <HomeRedirectCheck />
+
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+        {/* Hero Section */}
+        <div className="text-center mb-12 max-w-3xl">
+          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+            <span className="text-foreground">
+              {heroData.title.split(" ").slice(0, 2).join(" ")}{" "}
+            </span>
+            <span className="bg-gradient-to-r from-neon-green via-neon-cyan to-neon-magenta bg-clip-text text-transparent">
+              {heroData.title.split(" ").slice(2).join(" ") || "Dream PC"}
+            </span>
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            {heroData.description}
+          </p>
         </div>
-      </main>
+
+        {/* Experience Level Selector */}
+        <ExperienceSelector experienceLevels={experienceLevels} />
+
+        {/* Feature highlights */}
+        {heroData.features.length > 0 && (
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {heroData.features.map((feature, index) => (
+              <FeatureCard
+                key={index}
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
+
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="text-center p-6">
+      <div className="w-12 h-12 rounded-xl bg-surface/50 border border-border/50 flex items-center justify-center mx-auto mb-4">
+        <span className="text-2xl">{icon}</span>
+      </div>
+      <h3 className="font-heading font-semibold mb-2">{title}</h3>
+      <p className="text-sm text-muted-foreground">{description}</p>
     </div>
   );
 }

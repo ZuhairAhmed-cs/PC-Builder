@@ -1,0 +1,62 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Main gradient: neon-green to neon-cyan to neon-magenta -->
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#39FF14"/>
+      <stop offset="50%" stop-color="#00FFFF"/>
+      <stop offset="100%" stop-color="#FF00FF"/>
+    </linearGradient>
+    
+    <!-- Glow effect -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Screen gradient -->
+    <linearGradient id="screenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#0a0a0f"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer rounded rectangle with gradient border -->
+  <rect x="30" y="25" width="140" height="110" rx="12" fill="url(#mainGradient)" filter="url(#glow)"/>
+  
+  <!-- Inner dark screen -->
+  <rect x="36" y="31" width="128" height="98" rx="8" fill="url(#screenGradient)"/>
+  
+  <!-- Monitor stand base -->
+  <path d="M85 135 L115 135 L120 155 L80 155 Z" fill="url(#mainGradient)"/>
+  
+  <!-- Stand foot -->
+  <rect x="60" y="155" width="80" height="8" rx="4" fill="url(#mainGradient)"/>
+  
+  <!-- PC Components inside screen (stylized) -->
+  <!-- CPU chip -->
+  <rect x="50" y="50" width="30" height="30" rx="4" fill="#39FF14" opacity="0.8"/>
+  <rect x="55" y="55" width="20" height="20" rx="2" fill="#0a0a0f"/>
+  
+  <!-- GPU card -->
+  <rect x="90" y="45" width="60" height="25" rx="3" fill="#00FFFF" opacity="0.7"/>
+  <rect x="95" y="50" width="50" height="15" rx="2" fill="#0a0a0f"/>
+  
+  <!-- RAM sticks -->
+  <rect x="90" y="80" width="8" height="35" rx="2" fill="#FF00FF" opacity="0.8"/>
+  <rect x="102" y="80" width="8" height="35" rx="2" fill="#FF00FF" opacity="0.6"/>
+  <rect x="114" y="80" width="8" height="35" rx="2" fill="#FF00FF" opacity="0.8"/>
+  
+  <!-- Power LED indicator -->
+  <circle cx="55" cy="115" r="4" fill="#39FF14">
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Decorative circuit lines -->
+  <path d="M45 95 L45 105 L60 105" stroke="#39FF14" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <path d="M130 55 L145 55 L145 70" stroke="#00FFFF" stroke-width="1.5" fill="none" opacity="0.5"/>
+</svg>
+
+
