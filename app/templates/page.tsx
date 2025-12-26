@@ -8,6 +8,8 @@ import {
 import { adaptTemplate } from "@/lib/contentstack/adapter";
 import type { BuildTemplate } from "@/types";
 
+export const dynamic = 'force-dynamic';
+
 export default async function TemplatesPage() {
   let templates: BuildTemplate[] = [];
 

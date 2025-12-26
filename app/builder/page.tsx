@@ -3,6 +3,8 @@ import { getPageByUrl } from "@/lib/contentstack";
 import { getComponentsByCategoryFromPage } from "@/lib/contentstack/adapter";
 import { BuilderClient } from "@/components/builder-client";
 
+export const dynamic = 'force-dynamic';
+
 export default async function BuilderPage({
   searchParams,
 }: {

@@ -8,6 +8,8 @@ import {
 } from "@/lib/contentstack";
 import type { ExperienceLevel } from "@/types";
 
+export const dynamic = 'force-dynamic';
+
 interface Feature {
   icon: string;
   title: string;
