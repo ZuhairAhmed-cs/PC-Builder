@@ -13,7 +13,7 @@ export type ComponentCategory =
 export type StockStatus = "in_stock" | "limited" | "out_of_stock";
 
 // Experience Level
-export type ExperienceLevelId = "beginner" | "intermediate" | "expert";
+export type ExperienceLevelId = "beginner" | "intermediate" | "advanced";
 
 // Product Links
 export interface ProductLink {
@@ -33,7 +33,7 @@ export interface ProductLinks {
 export interface LevelContent<T> {
   beginner: T;
   intermediate: T;
-  expert: T;
+  advanced: T;
 }
 
 // Specifications by level

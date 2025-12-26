@@ -1,8 +1,9 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useBuildStore } from "@/store/build-store";
@@ -18,14 +19,37 @@ const experienceLevelInfo: Record<
 > = {
   beginner: { displayName: "First-Time Builder", icon: "🎮" },
   intermediate: { displayName: "Enthusiast", icon: "⚡" },
-  expert: { displayName: "Expert Builder", icon: "🚀" },
+  advanced: { displayName: "Expert Builder", icon: "🚀" },
 };
 
 interface HeaderClientProps {
   headerData: AdaptedHeader;
 }
 
-export function HeaderClient({ headerData }: HeaderClientProps) {
+// Helper component that uses searchParams
+function SearchParamsAwareContent({
+  children,
+}: {
+  children: (buildUrl: (path: string) => string) => React.ReactNode;
+}) {
+  const searchParams = useSearchParams();
+
+  // Helper to build URL with level parameter if it exists
+  const buildUrl = (path: string) => {
+    const level = searchParams.get("level");
+    return level ? `${path}?level=${level}` : path;
+  };
+
+  return <>{children(buildUrl)}</>;
+}
+
+function HeaderContent({
+  headerData,
+  buildUrl,
+}: {
+  headerData: AdaptedHeader;
+  buildUrl: (path: string) => string;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const { experienceLevel, resetStore, getCompletionCount } = useBuildStore();
@@ -59,7 +83,7 @@ export function HeaderClient({ headerData }: HeaderClientProps) {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
+        <Link href={buildUrl("/")} className="flex items-center gap-3 group">
           <div className="relative">
             <Image
               src={logo || ""}
@@ -84,7 +108,7 @@ export function HeaderClient({ headerData }: HeaderClientProps) {
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => (
-            <Link key={link.url} href={link.url}>
+            <Link key={link.url} href={buildUrl(link.url)}>
               <Button
                 variant="ghost"
                 className={cn(
@@ -125,7 +149,7 @@ export function HeaderClient({ headerData }: HeaderClientProps) {
 
           {/* Experience Level Badge */}
           {currentLevel && (
-            <Link href="/">
+            <Link href={buildUrl("/")}>
               <Badge
                 variant="outline"
                 className="gap-1.5 px-3 py-1.5 border-neon-green/30 hover:border-neon-green/60 transition-colors cursor-pointer"
@@ -152,5 +176,21 @@ export function HeaderClient({ headerData }: HeaderClientProps) {
         </div>
       </div>
     </header>
+  );
+}
+
+export function HeaderClient({ headerData }: HeaderClientProps) {
+  return (
+    <Suspense
+      fallback={
+        <HeaderContent headerData={headerData} buildUrl={(path) => path} />
+      }
+    >
+      <SearchParamsAwareContent>
+        {(buildUrl) => (
+          <HeaderContent headerData={headerData} buildUrl={buildUrl} />
+        )}
+      </SearchParamsAwareContent>
+    </Suspense>
   );
 }

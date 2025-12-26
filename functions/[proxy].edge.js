@@ -5,7 +5,7 @@ export default async function handler(request, context) {
   console.log("🚀 [EDGE FUNCTION] INVOKED!");
   console.log("📍 [EDGE FUNCTION] URL:", request.url);
   console.log("==========================================");
-  
+
   const parsedUrl = new URL(request.url);
   const pathname = parsedUrl.pathname;
   console.log("📂 [EDGE FUNCTION] Pathname:", pathname);
@@ -19,12 +19,14 @@ export default async function handler(request, context) {
   console.log("🔧 [EDGE FUNCTION] Processing personalization...");
 
   // Configure SDK for EU region if specified
-  const edgeApiUrl = context.env.NEXT_PUBLIC_CONTENTSTACK_PERSONALIZE_EDGE_API_URL;
-  const projectUid = context.env.NEXT_PUBLIC_CONTENTSTACK_PERSONALIZE_PROJECT_UID;
-  
+  const edgeApiUrl =
+    context.env.NEXT_PUBLIC_CONTENTSTACK_PERSONALIZE_EDGE_API_URL;
+  const projectUid =
+    context.env.NEXT_PUBLIC_CONTENTSTACK_PERSONALIZE_PROJECT_UID;
+
   console.log("🔑 [EDGE FUNCTION] Project UID exists:", !!projectUid);
   console.log("🌍 [EDGE FUNCTION] Edge API URL exists:", !!edgeApiUrl);
-  
+
   if (edgeApiUrl) {
     console.log("🌍 [EDGE FUNCTION] Setting Edge API URL");
     Personalize.setEdgeApiUrl(edgeApiUrl);
@@ -41,7 +43,10 @@ export default async function handler(request, context) {
     console.log("🎲 [EDGE FUNCTION] Variant param:", variantParam);
 
     // Add variant parameter to URL using SDK's constant
-    parsedUrl.searchParams.set(personalizeSdk.VARIANT_QUERY_PARAM, variantParam);
+    parsedUrl.searchParams.set(
+      personalizeSdk.VARIANT_QUERY_PARAM,
+      variantParam
+    );
     console.log("🔗 [EDGE FUNCTION] Modified URL:", parsedUrl.toString());
 
     // Create new request with modified URL

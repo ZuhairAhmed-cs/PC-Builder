@@ -107,7 +107,7 @@ export function checkCompatibility(
 
   // Rule 6: RAM DDR generation compatibility (basic check)
   if (build.motherboard && build.ram) {
-    const moboSupport = build.motherboard.specifications?.expert;
+    const moboSupport = build.motherboard.specifications?.advanced;
     if (moboSupport) {
       const ramSupport = JSON.stringify(moboSupport).toLowerCase();
       const ramType = build.ram.specifications?.intermediate?.Type?.toString().toLowerCase();

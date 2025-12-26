@@ -19,7 +19,7 @@ export const STORAGE_KEYS = {
 /**
  * Experience level type
  */
-export type ExperienceLevelId = "beginner" | "intermediate" | "expert";
+export type ExperienceLevelId = "beginner" | "intermediate" | "advanced";
 
 /**
  * Get or create a unique user ID

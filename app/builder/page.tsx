@@ -3,15 +3,18 @@ import { getPageByUrl } from "@/lib/contentstack";
 import { getComponentsByCategoryFromPage } from "@/lib/contentstack/adapter";
 import { BuilderClient } from "@/components/builder-client";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function BuilderPage({
   searchParams,
 }: {
-  searchParams: Record<string, string>;
+  searchParams: Promise<Record<string, string>>;
 }) {
+  // Await the searchParams Promise (Next.js 16 requirement)
+  const params = await searchParams;
+
   // Get variant parameter from URL (set by Launch Edge Function)
-  const variantParam = searchParams[Personalize.VARIANT_QUERY_PARAM];
+  const variantParam = params[Personalize.VARIANT_QUERY_PARAM];
 
   // Fetch builder page data with all categories and components resolved
   // If variant param exists, CDA will return personalized component variants

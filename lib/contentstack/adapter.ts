@@ -47,10 +47,10 @@ import type {
  */
 function deriveExperienceLevelId(
   title: string
-): "beginner" | "intermediate" | "expert" {
+): "beginner" | "intermediate" | "advanced" {
   const name = title.toLowerCase();
   if (name.includes("beginner") || name.includes("first")) return "beginner";
-  if (name.includes("expert") || name.includes("advanced")) return "expert";
+  if (name.includes("expert") || name.includes("advanced")) return "advanced";
   return "intermediate";
 }
 
@@ -135,13 +135,13 @@ export function adaptComponent(cs: CSComponent): PCComponent {
   const descriptions: LevelContent<string> = {
     beginner: cs.description || "",
     intermediate: cs.description || "",
-    expert: cs.description || "",
+    advanced: cs.description || "",
   };
 
   const specifications: LevelContent<SpecificationSet> = {
     beginner: specs,
     intermediate: specs,
-    expert: specs,
+    advanced: specs,
   };
 
   // For PSUs, extract wattage from specifications

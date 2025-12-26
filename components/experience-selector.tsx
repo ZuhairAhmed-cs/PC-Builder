@@ -34,8 +34,8 @@ export function ExperienceSelector({
     // Set in personalize context (localStorage + cookie for edge function)
     setExperienceLevelPersist(levelId);
 
-    // Navigate to builder
-    router.push("/builder");
+    // Navigate to builder WITH level query parameter for Personalize audience matching
+    router.push(`/builder?level=${levelId}`);
   };
 
   if (!experienceLevels || experienceLevels.length === 0) {

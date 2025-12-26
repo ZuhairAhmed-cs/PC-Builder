@@ -23,7 +23,7 @@ const experienceLevelInfo: Record<
 > = {
   beginner: { displayName: "First-Time Builder", icon: "🎮" },
   intermediate: { displayName: "Enthusiast", icon: "⚡" },
-  expert: { displayName: "Expert Builder", icon: "🚀" },
+  advanced: { displayName: "Expert Builder", icon: "🚀" },
 };
 
 interface TemplatesClientProps {
@@ -130,7 +130,7 @@ export function TemplatesClient({ templates }: TemplatesClientProps) {
                   <div className="text-6xl">
                     {template.targetLevel === "beginner" && "🎮"}
                     {template.targetLevel === "intermediate" && "⚡"}
-                    {template.targetLevel === "expert" && "🚀"}
+                    {template.targetLevel === "advanced" && "🚀"}
                   </div>
 
                   {/* Price badge */}

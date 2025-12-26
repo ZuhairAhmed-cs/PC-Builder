@@ -98,7 +98,7 @@ export function HelpTooltip({
           <p className="text-sm text-muted-foreground leading-relaxed">
             {helpContent.explanation}
           </p>
-          {level !== "expert" && (
+          {level !== "advanced" && (
             <p className="text-[10px] text-muted-foreground/70 pt-2 border-t border-border/30">
               💡 Tip: Select &quot;Expert&quot; mode for more technical details.
             </p>
