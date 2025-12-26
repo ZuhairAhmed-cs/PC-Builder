@@ -14,11 +14,10 @@ export function HomeRedirectCheck() {
 
   useEffect(() => {
     if (experienceLevel) {
-      router.push("/builder");
+      router.push(`/builder?level=${experienceLevel}`);
     }
   }, [experienceLevel, router]);
 
   // This component doesn't render anything visible
   return null;
 }
-
